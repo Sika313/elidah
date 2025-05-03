@@ -1,0 +1,56 @@
+<div class="flex flex-row">
+
+  <!-- NAV SECTION -->
+  <div class="flex flex-col w-[20vw] h-screen items-center pt-4 bg-sky-900 text-white">
+<img src={
+if @user.gender == "M" do 
+"/images/male_logo.png"
+else
+"/images/female_logo.jpeg"
+end}
+alt="image" class="w-20 h-20 rounded-full mb-4" />
+
+    <u class="mb-4"><p>User Management</p></u>
+    <a href="#" phx-click={show_modal("add_user")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add User</a>
+    <a href="#" phx-click="view_emp" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Employees</a>
+    
+<a href="/logout" class="flex flex-row items-center mt-4">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+</svg>
+<p>Logout</p>
+</a>
+  </div>
+
+  <!-- END -->
+<%= if @view_employees do %>
+  <.live_component module={ViewEmployeesComponent} id="view employees" />
+<% end %>
+
+</div>
+
+<.modal id="add_user">
+  <form method="post" action="/admin/add_user" phx-submit="create_user" class="flex flex-col h-[70vh] justify-around">
+    <label for="fname">First Name:</label>
+    <input type="text" id="fname" name="fname" placeholder="First name" />
+    <label for="lname">Last Name:</label>
+    <input type="text" id="lname" name="lname" placeholder="Last name" />
+    <label for="gender">Gender</label> 
+    <select id="gender" name="gender">
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+    </select>
+    <label for="role">Role:</label>
+    <select name="role">
+      <%= for role <- @roles do %>
+        <option value={role.id}> <%= role.name %> </option>
+      <% end %>
+    </select>
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" name="phone" placeholder="Phone number" />
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Password" />
+  
+    <button type="submit" class="text-white bg-blue-800 hover:bg-blue-700 transition-colors px-2 py-4" phx-click={hide_modal("add_user")}>Submit</button>
+  </form>
+</.modal>
