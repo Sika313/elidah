@@ -1,0 +1,54 @@
+<div class="flex flex-row">
+
+  <!-- NAV SECTION -->
+  <div class="flex flex-col w-[20vw] h-screen items-center pt-4 bg-sky-900 text-white">
+<img src={
+if @user.gender == "M" do 
+"/images/male_logo.png"
+else
+"/images/female_logo.jpeg"
+end}
+alt="image" class="w-20 h-20 rounded-full mb-4" />
+<p class="mb-6"><b>
+<%= @user.fname %> <%= @user.lname %>
+</b></p>
+<button phx-click={show_modal("show_upload_document")} class="mb-4">Upload document</button>   
+<button phx-click={show_modal("show_documents")}>View documents</button>   
+<a href="/logout" class="flex flex-row items-center mt-4">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+</svg>
+<p>Logout</p>
+</a>
+  </div>
+
+<%= if @show_file do %>
+  <.live_component module={ViewFileComponent} id="view_file" file_id={@file_id} />
+<% end %>
+
+
+  <!-- END -->
+</div>
+
+<.modal id="show_upload_document">
+<form id="upload-form" phx-submit="save" phx-change="validate">
+  <.live_file_input upload={@uploads.avatar} /> <br />
+  <label for="name">File name</label> 
+  <input id="name" name="name" placeholder="File name" class="mt-6" /> <br />
+  <button type="submit" phx-click={hide_modal("show_upload_document")}>Upload</button>
+</form>
+</.modal>
+
+<.modal id="show_documents">
+<ul>
+  <%= for file <- @files do %>
+    <li class="flex flex-row justify-between border-b-2 border-b-blue-500 mb-4"> <%= file.name %>
+    <form phx-submit="view_file">
+    <input type="text" name="file_id" value={file.id} class="hidden" />
+    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-400 transition-colors text-white"  phx-click={hide_modal("show_documents")}>View</button> 
+    </form>
+    </li>
+  <% end %>
+</ul>
+</.modal>
+

@@ -9,6 +9,9 @@ else
 "/images/female_logo.jpeg"
 end}
 alt="image" class="w-20 h-20 rounded-full mb-4" />
+<p class="mb-6"><b>
+<%= @user.fname %> <%= @user.lname %>
+</b></p>
 
     <u class="mb-4"><p>User Management</p></u>
     <a href="#" phx-click={show_modal("add_user")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add User</a>

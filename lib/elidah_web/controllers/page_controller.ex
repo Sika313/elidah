@@ -25,10 +25,14 @@ defmodule ElidahWeb.PageController do
         |> redirect(to: "/login")
         conn
       {:ok, result} ->
+        to_render = cond do
+          result.role_id == 1 -> ElidahWeb.AdminLive
+          result.role_id == 2 -> ElidahWeb.TeacherLive
+        end
         conn = conn 
         |> put_flash(:info, "Login successful")
         |> put_session(:user_id, result.id)
-        |> live_render(ElidahWeb.AdminLive)
+        |> live_render(to_render)
     end
   end
 
