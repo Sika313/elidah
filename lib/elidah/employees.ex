@@ -21,6 +21,10 @@ defmodule Elidah.EMPLOYEES do
     end
   end
 
+  def get_by_role_id(id) do
+    query = from e in Employee, where: e.role_id == ^id
+    Repo.all(query)
+  end
 
   @doc """
   Returns the list of employees.

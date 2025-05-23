@@ -14,8 +14,13 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 </b></p>
 
     <u class="mb-4"><p>User Management</p></u>
-    <a href="#" phx-click={show_modal("add_user")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add User</a>
-    <a href="#" phx-click="view_emp" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Employees</a>
+    <button phx-click={show_modal("add_user")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add User</button>
+    <button phx-click="view_emp" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Employees</button>
+
+    <u class="mb-4"><p>Class Management</p></u>
+    <button phx-click={show_modal("add_class")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add Class</button>
+    <button phx-click="view_classes" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Classes</button>
+
     
 <a href="/logout" class="flex flex-row items-center mt-4">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -27,8 +32,13 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 
   <!-- END -->
 <%= if @view_employees do %>
-  <.live_component module={ViewEmployeesComponent} id="view employees" />
+  <.live_component module={ViewEmployeesComponent} id="view_employees" />
 <% end %>
+
+<%= if @view_classes do %>
+  <.live_component module={ViewClassesComponent} id="view_classes" />
+<% end %>
+
 
 </div>
 
@@ -55,5 +65,24 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
     <input type="password" id="password" name="password" placeholder="Password" />
   
     <button type="submit" class="text-white bg-blue-800 hover:bg-blue-700 transition-colors px-2 py-4" phx-click={hide_modal("add_user")}>Submit</button>
+  </form>
+</.modal>
+
+<.modal id="add_class">
+  <form phx-submit="handle_add_class" class="flex flex-col">
+    <label for="grade">Grade</label>
+    <input type="text" id="grade" name="grade" placeholder="Grade" />
+     <label for="subject">Grade</label>
+     <input type="text" id="subject" name="subject" placeholder="Subject" />
+     <label for="teacher">Choose teacher:</label>
+     <select id="teacher" name="teacher_id">
+      <%= for teacher <- @teachers do %>
+    <option value={teacher.id}><%= teacher.fname %> <%= teacher.lname %></option>
+
+      <% end %>
+
+     </select>
+      <button type="submit" phx-click={hide_modal('add_class')} class="bg-blue-600 text-white px-4 py-2">Add</button>
+    
   </form>
 </.modal>
