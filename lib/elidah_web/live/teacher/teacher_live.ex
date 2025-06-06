@@ -2,17 +2,22 @@ defmodule ElidahWeb.TeacherLive do
   use ElidahWeb, :live_view
   alias Elidah.EMPLOYEES
   alias Elidah.FILES
+  alias Elidah.CLASSES
   alias ElidahWeb.ViewFileComponent
 
   def mount(_params, session, socket) do
     user = EMPLOYEES.get_employee!(session["user_id"]) |> Map.from_struct()
+    classes = CLASSES.find_class_by_teacher_id(user.id) 
+    classes_map = for class <- classes do
+      Map.from_struct(class)
+    end
     files = case FILES.get_by_emp_id(user.id) do
       [] -> []
       result -> for r <- result do Map.from_struct(r) end
     end
-    IO.inspect(files, label: "FILES--->")
     socket = socket
     |> assign(:user, user)
+    |> assign(:classes, classes_map)
     |> assign(:view_employees, false)
     |> assign(:files, files)
     |> assign(:file_id, "")

@@ -5,8 +5,15 @@ defmodule Elidah.CLASSES do
 
   import Ecto.Query, warn: false
   alias Elidah.Repo
-
   alias Elidah.CLASSES.Class
+
+  @doc """
+    USER DEFINED FUNCTIONS
+  """
+  def find_class_by_teacher_id(id) do
+    query = from s in Class, where: s.id == ^id
+    Repo.all(query)
+  end
 
   @doc """
   Returns the list of classes.
