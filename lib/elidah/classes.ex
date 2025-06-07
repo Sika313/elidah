@@ -15,6 +15,10 @@ defmodule Elidah.CLASSES do
     Repo.all(query)
   end
 
+  def find_by_grade_and_subject(params) do
+    query = from c in Class, where: c.grade == ^params.grade and c.subject == ^params.subject
+    Repo.one(query)
+  end
   @doc """
   Returns the list of classes.
 

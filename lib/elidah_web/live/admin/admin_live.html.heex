@@ -1,7 +1,7 @@
 <div class="flex flex-row">
 
   <!-- NAV SECTION -->
-  <div class="flex flex-col w-[20vw] h-screen items-center pt-4 bg-sky-900 text-white">
+  <div class="flex flex-col w-[20vw] items-center pt-4 bg-sky-900 text-white">
 <img src={
 if @user.gender == "M" do 
 "/images/male_logo.png"
@@ -21,7 +21,16 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
     <button phx-click={show_modal("add_class")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add Class</button>
     <button phx-click="view_classes" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Classes</button>
 
-    
+     <u class="mb-4"><p>Class session Management</p></u>
+    <button phx-click={show_modal("add_class_session")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add class session</button>
+    <button phx-click="view_class_sessions" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View class sessions</button>
+
+     <u class="mb-4"><p>Payroll Management</p></u>
+    <button phx-click={show_modal("add_payroll")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add Employee payroll</button>
+    <button phx-click="view_salaries" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Salary information</button>
+
+
+   
 <a href="/logout" class="flex flex-row items-center mt-4">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
@@ -37,6 +46,14 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 
 <%= if @view_classes do %>
   <.live_component module={ViewClassesComponent} id="view_classes" />
+<% end %>
+
+<%= if @view_class_sessions do %>
+  <.live_component module={ViewClassSessionsComponent} id="view_class_sessions" />
+<% end %>
+
+<%= if @view_salaries do %>
+  <.live_component module={ViewSalariesComponent} id="view_salaries" />
 <% end %>
 
 
@@ -85,4 +102,57 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
       <button type="submit" phx-click={hide_modal('add_class')} class="bg-blue-600 text-white px-4 py-2">Add</button>
     
   </form>
+</.modal>
+
+<.modal id="add_class_session">
+  <form phx-submit="handle_add_class_session" class="flex flex-col">
+    <label for="grade">Grade</label>
+    <select id="grade" name="grade">
+      <%= for class <- @classes do %>
+        <option value={class.grade}> <%= class.grade %> </option>
+      <% end %>
+    </select>
+    <label for="subject">Grade</label>
+    <select id="subject" name="subject">
+      <%= for class <- @classes do %>
+        <option value={class.subject}> <%= class.subject %> </option>
+      <% end %>
+    </select>
+    <button type="submit" phx-click={hide_modal('add_class_session')} class="px-4 py-2 bg-blue-500 text-white">Submit</button>
+  </form>
+</.modal>
+
+<.modal id="add_payroll">
+  <%= if @emp_add_payroll == [] do %>
+    <h1> No employees found. </h1>
+  <% else %>
+   <form phx-submit="handle_add_payroll" class="flex flex-col">
+    <label for="name">Employee name</label>
+    <select id="name" name="name">
+      <%= for emp <- @emp_add_payroll do %>
+        <option value={emp.fname}> <%= emp.fname %>: <%= emp.phone %> </option>
+      <% end %>
+    </select>
+    <label for="phone">Phone number</label>
+    <select id="phone" name="phone">
+      <%= for emp <- @emp_add_payroll do %>
+        <option value={emp.phone}> <%= emp.phone %> </option>
+      <% end %>
+    </select>
+      <label for="total_income">Total income</label>
+      <input type="text" id="total_income" name="total_income" placeholder="Total income" />
+      <label for="napsa">NAPSA VALUE</label>
+      <input type="text" id="napsa" name="napsa" placeholder="NAPSA" />
+      <label for="nhima">NHIMA VALUE</label>
+      <input type="text" id="nhima" name="nhima" placeholder="NHIMA" />
+      <label for="paye">PAYE VALUE</label>
+      <input type="text" id="paye" name="paye" placeholder="PAYE" />
+      <label for="other">OTHER CHARGES (If none, put zero in the field below)</label>
+      <input type="text" id="other" name="other" placeholder="OTHER CHARGES" />
+      <label for="comment">Comment on other charges (Put None if charges are zero)</label>
+      <input type="text" id="comment" name="comment" placeholder="Comment" />
+
+    <button type="submit" phx-click={hide_modal('add_payroll')} class="px-4 py-2 bg-blue-500 text-white">Submit</button>
+   </form>
+  <% end %>
 </.modal>
