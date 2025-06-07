@@ -10,6 +10,7 @@ defmodule ElidahWeb.AdminLive do
   alias ElidahWeb.ViewClassesComponent 
   alias ElidahWeb.ViewClassSessionsComponent
   alias ElidahWeb.ViewSalariesComponent
+  alias ElidahWeb.ViewDaysComponent
 
   def mount(_params, session, socket) do
     user = EMPLOYEES.get_employee!(session["user_id"]) |> Map.from_struct()
@@ -17,6 +18,7 @@ defmodule ElidahWeb.AdminLive do
     classes_map = for class <- classes do
       Map.from_struct(class)
     end
+  
     roles = ROLES.list_roles()
     |> then(fn roles -> for i <- roles do Map.from_struct(i) end end )
     teachers = EMPLOYEES.get_by_role_id(2)
@@ -26,7 +28,6 @@ defmodule ElidahWeb.AdminLive do
     all_employees = EMPLOYEES.list_employees()
     |> then(fn employees -> for emp <- employees do Map.from_struct(emp) end end)
     emp_add_payroll = Enum.filter(all_employees, fn e -> SALARIES.find_by_phone(e.phone) == [] end) 
-    IO.inspect(emp_add_payroll, label: "THIS--->")
       
       
     socket = socket
@@ -39,6 +40,7 @@ defmodule ElidahWeb.AdminLive do
     |> assign(:view_classes, false)
     |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, false)
+    |> assign(:view_days, false)
     {:ok, socket}
   end
 
@@ -52,6 +54,12 @@ defmodule ElidahWeb.AdminLive do
    |> assign(:view_classes, false)
    {:noreply, socket}
   end
+  def handle_event("close_view_days", _params, socket) do
+   socket = socket
+   |> assign(:view_days, false)
+   {:noreply, socket}
+  end
+
   def handle_event("close_view_class_sessions", _params, socket) do
    socket = socket
    |> assign(:view_class_sessions, false)
@@ -79,7 +87,6 @@ def handle_event("close_view_salaries", _params, socket) do
         teachers = for teacher <- teachers do
         Map.from_struct(teacher)
         end
-
         socket = socket
         |> assign(:teachers, teachers)
         |> put_flash(:info, "User created successfully.")
@@ -93,25 +100,51 @@ def handle_event("close_view_salaries", _params, socket) do
 
   def handle_event("view_emp", _params, socket) do
     socket = socket
+    |> assign(:view_days, false)
     |> assign(:view_employees, true)
+    |> assign(:view_classes, false)
+    |> assign(:view_class_sessions, false)
+    |> assign(:view_salaries, false)
     {:noreply, socket}
   end
 
   def handle_event("view_classes", _params, socket) do
     socket = socket
+    |> assign(:view_days, false)
+    |> assign(:view_employees, false)
     |> assign(:view_classes, true)
+    |> assign(:view_class_sessions, false)
+    |> assign(:view_salaries, false)
     {:noreply, socket}
   end
   def handle_event("view_class_sessions", _params, socket) do
     socket = socket
+    |> assign(:view_days, false)
+    |> assign(:view_employees, false)
+    |> assign(:view_classes, false)
     |> assign(:view_class_sessions, true)
+    |> assign(:view_salaries, false)
     {:noreply, socket}
   end
   def handle_event("view_salaries", _params, socket) do
     socket = socket
+    |> assign(:view_days, false)
+    |> assign(:view_employees, false)
+    |> assign(:view_classes, false)
+    |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, true)
     {:noreply, socket}
   end
+def handle_event("view_days", _params, socket) do
+    socket = socket
+    |> assign(:view_days, true)
+    |> assign(:view_employees, false)
+    |> assign(:view_classes, false)
+    |> assign(:view_class_sessions, false)
+    |> assign(:view_salaries, false)
+    {:noreply, socket}
+  end
+
 
 
 

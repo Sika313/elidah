@@ -17,6 +17,8 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
     <button phx-click={show_modal("add_user")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add User</button>
     <button phx-click="view_emp" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Employees</button>
 
+    <button phx-click="view_days" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">Teacher class sessions</button>
+
     <u class="mb-4"><p>Class Management</p></u>
     <button phx-click={show_modal("add_class")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add Class</button>
     <button phx-click="view_classes" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Classes</button>
@@ -55,6 +57,11 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 <%= if @view_salaries do %>
   <.live_component module={ViewSalariesComponent} id="view_salaries" />
 <% end %>
+
+<%= if @view_days do %>
+  <.live_component module={ViewDaysComponent} id="view_days" />
+<% end %>
+
 
 
 </div>

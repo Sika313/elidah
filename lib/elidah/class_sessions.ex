@@ -8,11 +8,21 @@ defmodule Elidah.CLASS_SESSIONS do
 
   alias Elidah.CLASS_SESSIONS.Class_session
 
+  def find_by_grade(grade) do
+    query = from c in Class_session, where: c.grade == ^grade
+    Repo.all(query)
+  end
 
   def find_by_grade_and_subject(params) do
     query = from c in Class_session, where: c.grade == ^params.grade and c.subject == ^params.subject
     Repo.one(query)
   end
+
+  def find_by_grade_and_subject_two(params) do
+    query = from c in Class_session, where: c.grade == ^params.grade and c.subject == ^params.subject
+    Repo.all(query)
+  end
+
 
   @doc """
   Returns the list of class_session.
