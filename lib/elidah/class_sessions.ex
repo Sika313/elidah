@@ -5,6 +5,7 @@ defmodule Elidah.CLASS_SESSIONS do
 
   import Ecto.Query, warn: false
   alias Elidah.Repo
+  alias Timex
 
   alias Elidah.CLASS_SESSIONS.Class_session
 
@@ -20,6 +21,21 @@ defmodule Elidah.CLASS_SESSIONS do
 
   def find_by_grade_and_subject_two(params) do
     query = from c in Class_session, where: c.grade == ^params.grade and c.subject == ^params.subject
+    Repo.all(query)
+  end
+
+  def find_by_grade_and_subject_three(params, month_start, month_end) do
+    month_st = month_start 
+    |> Timex.parse("{YYYY}-{0M}-{0D}")
+    |> Tuple.to_list()
+    |> Enum.at(1)
+    month_en = month_end 
+    |> Timex.parse("{YYYY}-{0M}-{0D}")
+    |> Tuple.to_list()
+    |> Enum.at(1)
+    IO.inspect(month_st, label: "MONTH START--->")
+    IO.inspect(month_en, label: "MONTH END--->")
+    query = from c in Class_session, where: c.grade == ^params.grade and c.subject == ^params.subject and c.inserted_at > ^month_st and c.inserted_at < ^month_en
     Repo.all(query)
   end
 

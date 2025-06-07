@@ -6,16 +6,17 @@ defmodule ElidahWeb.ViewMonthSalaryComponent do
   alias Elidah.CLASS_SESSIONS 
 
   def update(assigns, socket) do
+    IO.inspect(assigns, label: "ASSIGNS--->")
     classes = for class <- CLASSES.list_classes do
     Map.from_struct(class)
     end
     classes_one = for class <- classes do
-      teacher = EMPLOYEES.get_employee!(String.to_integer(class.teacher_id))          |> Map.from_struct()
+      teacher = EMPLOYEES.get_employee!(String.to_integer(class.teacher_id)) |> Map.from_struct()
       Map.put(class, :teacher, teacher)
     end
     classes_two = for class <- classes_one do
       params = %{grade: class.grade, subject: class.subject}
-      total = CLASS_SESSIONS.find_by_grade_and_subject_two(params) |> Enum.count()
+      total = CLASS_SESSIONS.find_by_grade_and_subject_three(params, assigns.month_start, assigns.month_end) |> Enum.count()
       salary = SALARIES.get_salary!(class.teacher.id) |> Map.from_struct()
       per_day = salary.total_income / 22
       deductions = salary.napsa + salary.nhima + salary.paye + salary.other

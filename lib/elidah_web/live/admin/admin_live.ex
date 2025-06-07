@@ -43,6 +43,8 @@ defmodule ElidahWeb.AdminLive do
     |> assign(:view_salaries, false)
     |> assign(:view_days, false)
     |> assign(:view_month_salary, false)
+    |> assign(:month_start, "")
+    |> assign(:month_end, "")
     {:ok, socket}
   end
 
@@ -214,6 +216,8 @@ def handle_event("view_days", _params, socket) do
   def handle_event("handle_month_salary", params, socket) do
     IO.inspect(params, label: "DATE--->")
     socket = socket
+    |> assign(:month_start, params["month_start"])
+    |> assign(:month_end, params["month_end"])
     |> assign(:view_days, false)
     |> assign(:view_employees, false)
     |> assign(:view_classes, false)

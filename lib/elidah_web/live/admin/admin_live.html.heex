@@ -64,11 +64,8 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 <% end %>
 
 <%= if @view_month_salary do %>
-  <.live_component module={ViewMonthSalaryComponent} id="view_month_salary" />
+  <.live_component module={ViewMonthSalaryComponent} id="view_month_salary" month_start={@month_start} month_end={@month_end} />
 <% end %>
-
-
-
 
 
 </div>
@@ -173,8 +170,11 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 
 <.modal id="month_salary">
   <form phx-submit="handle_month_salary">
-    <label for="month_salary">Choose month</label>
-    <input type="date" id="month_salary" name="month_salary" />
+    <label for="month_start">Start Date</label>
+    <input type="date" id="month_start" name="month_start" />
+
+    <label for="month_end">End Date</label>
+    <input type="date" id="month_end" name="month_end" />
 
     <button type="submit" phx-click={hide_modal('month_salary')} class="px-4 py-2 bg-blue-500 text-white">Submit</button>
   </form>
