@@ -11,6 +11,7 @@ defmodule ElidahWeb.AdminLive do
   alias ElidahWeb.ViewClassSessionsComponent
   alias ElidahWeb.ViewSalariesComponent
   alias ElidahWeb.ViewDaysComponent
+  alias ElidahWeb.ViewMonthSalaryComponent
 
   def mount(_params, session, socket) do
     user = EMPLOYEES.get_employee!(session["user_id"]) |> Map.from_struct()
@@ -41,6 +42,7 @@ defmodule ElidahWeb.AdminLive do
     |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, false)
     |> assign(:view_days, false)
+    |> assign(:view_month_salary, false)
     {:ok, socket}
   end
 
@@ -59,6 +61,13 @@ defmodule ElidahWeb.AdminLive do
    |> assign(:view_days, false)
    {:noreply, socket}
   end
+  def handle_event("close_month_salary", _params, socket) do
+   socket = socket
+   |> assign(:view_month_salary, false)
+   {:noreply, socket}
+  end
+
+
 
   def handle_event("close_view_class_sessions", _params, socket) do
    socket = socket
@@ -105,6 +114,7 @@ def handle_event("close_view_salaries", _params, socket) do
     |> assign(:view_classes, false)
     |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, false)
+    |> assign(:view_month_salary, false)
     {:noreply, socket}
   end
 
@@ -115,6 +125,7 @@ def handle_event("close_view_salaries", _params, socket) do
     |> assign(:view_classes, true)
     |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, false)
+    |> assign(:view_month_salary, false)
     {:noreply, socket}
   end
   def handle_event("view_class_sessions", _params, socket) do
@@ -124,6 +135,7 @@ def handle_event("close_view_salaries", _params, socket) do
     |> assign(:view_classes, false)
     |> assign(:view_class_sessions, true)
     |> assign(:view_salaries, false)
+    |> assign(:view_month_salary, false)
     {:noreply, socket}
   end
   def handle_event("view_salaries", _params, socket) do
@@ -133,6 +145,7 @@ def handle_event("close_view_salaries", _params, socket) do
     |> assign(:view_classes, false)
     |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, true)
+    |> assign(:view_month_salary, false)
     {:noreply, socket}
   end
 def handle_event("view_days", _params, socket) do
@@ -142,6 +155,7 @@ def handle_event("view_days", _params, socket) do
     |> assign(:view_classes, false)
     |> assign(:view_class_sessions, false)
     |> assign(:view_salaries, false)
+    |> assign(:view_month_salary, false)
     {:noreply, socket}
   end
 
@@ -194,6 +208,18 @@ def handle_event("view_days", _params, socket) do
     socket = socket
     |> put_flash(:info, "Employee successfully registered for payroll.")
     |> assign(:emp_add_payroll, emp_add_payroll)
+    {:noreply, socket}
+  end
+
+  def handle_event("handle_month_salary", params, socket) do
+    IO.inspect(params, label: "DATE--->")
+    socket = socket
+    |> assign(:view_days, false)
+    |> assign(:view_employees, false)
+    |> assign(:view_classes, false)
+    |> assign(:view_class_sessions, false)
+    |> assign(:view_salaries, false)
+    |> assign(:view_month_salary, true)
     {:noreply, socket}
   end
 

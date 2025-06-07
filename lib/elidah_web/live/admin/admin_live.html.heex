@@ -30,6 +30,7 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
      <u class="mb-4"><p>Payroll Management</p></u>
     <button phx-click={show_modal("add_payroll")} class="mb-4 px-4 py-2 hover:bg-sky-800 transition-colors">Add Employee payroll</button>
     <button phx-click="view_salaries" class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">View Salary information</button>
+    <button phx-click={show_modal("month_salary")} class="mb-4  px-4 py-2 hover:bg-sky-800 transition-colors">Payroll information</button>
 
 
    
@@ -61,6 +62,12 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 <%= if @view_days do %>
   <.live_component module={ViewDaysComponent} id="view_days" />
 <% end %>
+
+<%= if @view_month_salary do %>
+  <.live_component module={ViewMonthSalaryComponent} id="view_month_salary" />
+<% end %>
+
+
 
 
 
@@ -162,4 +169,13 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
     <button type="submit" phx-click={hide_modal('add_payroll')} class="px-4 py-2 bg-blue-500 text-white">Submit</button>
    </form>
   <% end %>
+</.modal>
+
+<.modal id="month_salary">
+  <form phx-submit="handle_month_salary">
+    <label for="month_salary">Choose month</label>
+    <input type="date" id="month_salary" name="month_salary" />
+
+    <button type="submit" phx-click={hide_modal('month_salary')} class="px-4 py-2 bg-blue-500 text-white">Submit</button>
+  </form>
 </.modal>

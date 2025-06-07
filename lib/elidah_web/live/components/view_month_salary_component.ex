@@ -1,21 +1,30 @@
-defmodule ElidahWeb.ViewClassSessionsComponent do
+defmodule ElidahWeb.ViewMonthSalaryComponent do
   use ElidahWeb, :live_component
-  alias Elidah.CLASS_SESSIONS 
+  alias Elidah.SALARIES 
   alias Elidah.CLASSES 
   alias Elidah.EMPLOYEES 
+  alias Elidah.CLASS_SESSIONS 
 
   def update(assigns, socket) do
-    class_sessions = CLASS_SESSIONS.list_class_session()
-    class_sessions_map = for class_session <- class_sessions do
-      Map.from_struct(class_session)
+    classes = for class <- CLASSES.list_classes do
+    Map.from_struct(class)
     end
-    class_session_teachers = for class_session <- class_sessions_map do
-      teacher_id = CLASSES.find_by_grade_and_subject(class_session) |> Map.from_struct()
-      teacher = EMPLOYEES.get_employee!(teacher_id.teacher_id)
-      Map.put(class_session, :teacher, teacher)
+    classes_one = for class <- classes do
+      teacher = EMPLOYEES.get_employee!(String.to_integer(class.teacher_id))          |> Map.from_struct()
+      Map.put(class, :teacher, teacher)
     end
+    classes_two = for class <- classes_one do
+      params = %{grade: class.grade, subject: class.subject}
+      total = CLASS_SESSIONS.find_by_grade_and_subject_two(params) |> Enum.count()
+      salary = SALARIES.get_salary!(class.teacher.id) |> Map.from_struct()
+      per_day = salary.total_income / 22
+      deductions = salary.napsa + salary.nhima + salary.paye + salary.other
+      total_salary = (per_day * total) - deductions 
+      Map.put(class, :total_salary, total_salary)
+    end
+
     socket = socket
-    |> assign(:class_sessions, class_session_teachers)
+    |> assign(:classes_two, classes_two)
     {:ok, socket}
   end
 
@@ -23,7 +32,7 @@ defmodule ElidahWeb.ViewClassSessionsComponent do
    ~H"""
 
 <div class="relative overflow-x-auto">
-    <button phx-click="close_view_class_sessions">
+    <button phx-click="close_month_salary">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
 </svg>
@@ -33,35 +42,30 @@ defmodule ElidahWeb.ViewClassSessionsComponent do
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                 Grade 
+                 Name 
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Subject 
+                  Phone number 
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Teacher 
+                  Total pay 
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Date 
-                </th>
+                
            </tr>
         </thead>
         <tbody>
-          <%= for class_session <- @class_sessions do %>
+          <%= for salary <- @classes_two do %>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                 <%= class_session.grade %> 
+                 <%= salary.teacher.fname %> 
                 </th>
                 <td class="px-6 py-4">
-                  <%= class_session.subject %> 
+                  <%= salary.teacher.phone %> 
                 </td>
                 <td class="px-6 py-4">
-                  <%= class_session.teacher.fname %> <%= class_session.teacher.lname %>
+                  <%= salary.total_salary |> then(fn i -> Float.round(i, 2) end) %>
                 </td>
- <td class="px-6 py-4">
-                  <%= class_session.inserted_at %>
-                </td>
-
+                
             </tr>
           <% end %>
       </tbody>
