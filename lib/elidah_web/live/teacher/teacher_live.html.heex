@@ -15,6 +15,7 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
 <button phx-click={show_modal("show_upload_document")} class="mb-4">Upload document</button>   
 <button phx-click={show_modal("show_documents")} class="mb-4">View documents</button>   
 <button phx-click={show_modal("view_classes")} class="mb-4">View classes</button>   
+<button phx-click={show_modal("view_salary")} class="mb-4">View Salary</button>   
 <a href="/logout" class="flex flex-row items-center mt-4">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
@@ -70,4 +71,14 @@ alt="image" class="w-20 h-20 rounded-full mb-4" />
       </tr>
     </table>
   <% end %>
+</.modal>
+
+<.modal id="view_salary">
+  <ul>
+    <li>Total income: <%= @salary.total_income %></li>
+    <li>NAPSA: <%= @salary.napsa %></li>
+    <li>NHIMA: <%= @salary.nhima %></li>
+    <li>PAYE: <%= @salary.paye %></li>
+    <li>OTHER: <%= @salary.other %></li>
+  </ul>
 </.modal>

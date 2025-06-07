@@ -3,10 +3,14 @@ defmodule ElidahWeb.TeacherLive do
   alias Elidah.EMPLOYEES
   alias Elidah.FILES
   alias Elidah.CLASSES
+  alias Elidah.SALARIES
   alias ElidahWeb.ViewFileComponent
 
   def mount(_params, session, socket) do
     user = EMPLOYEES.get_employee!(session["user_id"]) |> Map.from_struct()
+    salary = SALARIES.find_by_phone(user.phone)
+    |> then(fn salaries -> for salary <- salaries do Map.from_struct(salary) end end)
+    |> Enum.at(0)
     classes = CLASSES.find_class_by_teacher_id(user.id) 
     classes_map = for class <- classes do
       Map.from_struct(class)
@@ -15,8 +19,10 @@ defmodule ElidahWeb.TeacherLive do
       [] -> []
       result -> for r <- result do Map.from_struct(r) end
     end
+    IO.inspect(salary, label: "SALARY--->")
     socket = socket
     |> assign(:user, user)
+    |> assign(:salary, salary)
     |> assign(:classes, classes_map)
     |> assign(:view_employees, false)
     |> assign(:files, files)
